@@ -29,6 +29,7 @@
       inherit (pkgs) disko;
       "disko-image" = nixosConfigurations.${InfOS.hostName}.config.system.build.diskoImages;
       "disko-image-test" = import ./src/qemu { inherit pkgs; };
+      "libretoy-dd" = import ./src/dd { inherit pkgs; };
     };
 
   };
