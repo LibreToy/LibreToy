@@ -2,10 +2,13 @@
 
 {
   system.stateVersion = config.system.nixos.release;
- 
-  boot.loader.grub.efiSupport = lib.mkDefault true;
-  boot.loader.grub.efiInstallAsRemovable = lib.mkDefault true;
- 
+
+  imports = [
+    ./modules/bootloader/grub
+    ./modules/bootloader/grub/isoboot/grub-iso-multiboot.nix
+    ./modules/images
+  ];
+
   hardware.enableAllHardware = true;
  
   users.users.root.initialPassword = "todo";
