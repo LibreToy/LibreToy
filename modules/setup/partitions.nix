@@ -1,9 +1,7 @@
 { config, lib, ... }:
 
 let
-  hostname = "infos";
-
-  partitions = config.disko.devices.disk.${hostname}.content.partitions;
+  partitions = config.disko.devices.disk.${config.networking.hostName}.content.partitions;
   sortedPartitions = lib.sort (x: y: x.priority < y.priority) (lib.attrValues partitions);
 
   partitionToJSON = partition: {

@@ -1,17 +1,14 @@
-{ pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
-let
-  InfOS = builtins.fromJSON (builtins.readFile ./InfOS.json);
-in
 {
-  boot.zfs.devNodes = "/dev/disk/by-partlabel/disk-${InfOS.hostName}-ZFS";
+  boot.zfs.devNodes = "/dev/disk/by-partlabel/disk-${config.networking.hostName}-ZFS";
   networking.hostId = "00012f05";
 
   disko.imageBuilder.extraDependencies = with pkgs; [ exfat ];
   disko.devices = {
     disk = {
-      ${InfOS.hostName} = {
-        #device = "${InfOS.device}";
+      ${config.networking.hostName} = {
+        device = lib.mkDefault "/dev/vda";
         type = "disk";
         imageSize = "6G";
         content = {

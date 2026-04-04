@@ -1,17 +1,16 @@
-{ pkgs, ... }:
+{ self, cfg, pkgs, ... }:
 
-let
-  InfOS = builtins.fromJSON (builtins.readFile ../../InfOS.json);
-in
 with pkgs; writeShellApplication {
-  name = "partition-incremental";
+  name = "libretoy-repartition";
   runtimeInputs = [
+    nix
     gptfdisk  ## fdisk
     systemdMinimal  ## udevadm
     e2fsprogs.bin  ## resize2fs
     exfat  ## mkfs.exfat
     fatresize
     dosfstools  ## fatlabel
+    jq
   ];
   text = ''
     set -e
@@ -26,8 +25,7 @@ with pkgs; writeShellApplication {
     if [ $# -ge 3 ]; then
       PARTITIONS_JSON=$3
     else
-      nix build .#nixosConfigurations.${InfOS.hostName}.config.LibreToy.partitions_json
-      PARTITIONS_JSON=$(nix eval --raw .#nixosConfigurations.${InfOS.hostName}.config.LibreToy.partitions_json)
+      PARTITIONS_JSON=${self.nixosConfigurations.${cfg.networking.hostName}.config.LibreToy.partitions_json}
     fi
 
     [ -w "$DEVICE" ] || (echo "No permissions to access $DEVICE. You may want use sudo." && exit 1)

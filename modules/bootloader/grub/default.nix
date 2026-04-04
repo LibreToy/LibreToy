@@ -11,5 +11,8 @@
 
     extraEntriesBeforeNixOS = true;
     default = "saved";
+
+    splashImage = ../../../doc/img/LibreToy.png;
+    splashMode = "stretch";
   };
 }
